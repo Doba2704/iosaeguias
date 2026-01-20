@@ -3,15 +3,16 @@ import sqlite3
 connection = sqlite3.connect("itstep.sl3")
 cursor = connection.cursor()
 
-search_name = input("Введіть ім'я або прізвище для пошуку: ")
+group_name = input("Введіть назву групи для пошуку: ")
+cursor.execute(f"SELECT * FROM students WHERE GROUP_NAME = '{group_name}';")
 
-cursor.execute("SELECT * FROM students WHERE FULL_NAME LIKE ?", (f"%{search_name}%",))
-results = cursor.fetchall()
+print(f"Результати для групи {group_name}:")
+for student in cursor.fetchall():
+    print(student)
 
-if results:
-    for student in results:
-        print(student)
-else:
-    print("Нікого не знайдено.")
+print("\nСтуденти з балом >= 4.5 та кристалами > 200:")
+cursor.execute("SELECT * FROM students WHERE avg_score >= 4.5 AND CRYSTALS > 200;")
+for student in cursor.fetchall():
+    print(student)
 
 connection.close()
